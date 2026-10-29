@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberShield | Phishing Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand"><span class="shield">◆</span> CyberShield</div>
+        <span class="tag">CYBERSECURITY TOOL</span>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow">URL SECURITY ANALYSIS</p>
+            <h1>Detect threats.<br><span>Browse safer.</span></h1>
+            <p class="subtitle">
+                Analyze a URL for potentially suspicious characteristics
+                using our machine learning demonstration.
+            </p>
+        </section>
+
+        <section class="panel">
+            <h2>Scan a URL</h2>
+            <p class="muted">Enter a website address to analyze it.</p>
+
+            <form method="POST" action="/">
+                <label for="url">Website URL</label>
+                <div class="input-row">
+                    <input
+                        id="url"
+                        name="url"
+                        type="text"
+                        placeholder="https://example.com"
+                        value="{{ url }}"
+                        maxlength="2048"
+                        required
+                    >
+                    <button type="submit">Analyze URL</button>
+                </div>
+            </form>
+
+            {% if result %}
+                {% if result.error %}
+                    <div class="result warning">
+                        <h3>Unable to analyze URL</h3>
+                        <p>{{ result.error }}</p>
+                    </div>
+                {% else %}
+                    <div class="result">
+                        <p class="eyebrow">ANALYSIS RESULT</p>
+                        <h3>{{ result.result }}</h3>
+                        <p class="url-text">{{ result.url }}</p>
+
+                        <p class="muted">
+                            Model phishing score:
+                            <strong>{{ result.model_score }}%</strong>
+                        </p>
+
+                        {% if result.flags %}
+                            <h4>Indicators to review</h4>
+                            <ul>
+                                {% for flag in result.flags %}
+                                    <li>{{ flag }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No heuristic warnings were found.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </section>
+
+        <section class="notice">
+            <strong>Important:</strong> This is an educational prototype.
+            A low score does not prove a website is safe. Do not enter
+            passwords or sensitive information on an untrusted website.
+        </section>
+    </main>
+
+    <footer>CyberShield · Phishing Detection Project</footer>
+</body>
+</html>
